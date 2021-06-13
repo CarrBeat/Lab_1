@@ -11,33 +11,35 @@ public class Lab_11 {
                     if (rstr.contains(" ")) { // удаление пробелов в начале строки
                         rstr = rstr.trim();
                     }
-                    if (rstr.startsWith("/*")) { // начало  многострочного комментария
+
+                    if (rstr.startsWith("/*")) { // начало  многострочного комментария с начала строки
                         check = true;
                         continue;
                     }
-                    if (check & !rstr.contains("*/")) {
+
+                    if (check & !rstr.contains("*/")) { // пропуск строки, если идет многострочный коммент
                         continue;
                     }
-                    if (check & rstr.contains("*/")) {
+
+                    if (check & rstr.endsWith("*/")) { //конец многострочного коммента
                         check = false;
-                        if (rstr.endsWith("*/")) {
+                        continue;
+                    }
+
+
+                    if (!rstr.contains("//") & !rstr.contains("*/") & !rstr.contains("*/")) { // не комментарии
+                        fw.write(rstr + "\n");
+                    } else {
+                        ind = rstr.lastIndexOf("//"); // однострочные комментарии
+                        if (ind == 0){
                             continue;
                         }
-                        temp = rstr.substring(rstr.indexOf("*/") + 2);
-                        fw.write(temp + "\n");
-                        continue;
-                    }
-
-                    if (!rstr.contains("//") & !rstr.contains("*/") & !rstr.contains("*/")) {
-                        fw.write(rstr + "\n");
-                    }
-
-                    ind = rstr.lastIndexOf("//");
-                    if (ind > 0) {
-                        temp = rstr.substring(0, ind);
-                        fw.write(temp + "\n");
-                    }
-                    if (ind == 0) {
+                        if (ind > 0 & ind + 3 != rstr.indexOf(")")) {
+                            temp = rstr.substring(0, ind);
+                            fw.write(temp + "\n");
+                        } else {
+                            fw.write(rstr + "\n");
+                        }
                     }
                 }
             } catch (IOException e) {
